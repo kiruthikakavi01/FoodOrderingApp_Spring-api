@@ -2,7 +2,7 @@ package com.foodorderingapp.controller;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.foodorderingapp.dao.MenuRepository;
 import com.foodorderingapp.model.Menu;
-import com.foodorderingapp.model.User;
+
 
 @RestController
 public class MenuController {
@@ -39,14 +39,15 @@ public class MenuController {
 	public List<Menu> findByName(@RequestParam("name") String dishName) {
 		System.out.println(dishName);
 		List<Menu> menu = menuRepository.findAll();
-		List<Menu> filteredMenus = menu.stream().filter(m-> m.getDishName().toLowerCase().contains(dishName.toLowerCase())).collect(Collectors.toList());
+		//List<Menu> filteredMenus = menu.stream().filter(m-> m.getDishName().toLowerCase().contains(dishName.toLowerCase())).collect(Collectors.toList());
+		List<Menu> filteredMenus = menu.stream().filter(m-> m.getDishName().toLowerCase().contains(dishName.toLowerCase())).toList();
 		return filteredMenus;
 	}
 	@GetMapping("dishes/type/search")
 	public List<Menu> findByType(@RequestParam("type") String dishType){
 		System.out.println(dishType);
 		List<Menu> menu=menuRepository.findAll();
-		List<Menu> filteredMenus=menu.stream().filter(m->m.getDishName().toLowerCase().contains(dishType.toLowerCase())).collect(Collectors.toList());
+		List<Menu> filteredMenus=menu.stream().filter(m->m.getDishName().toLowerCase().contains(dishType.toLowerCase())).toList();
 		return filteredMenus;
 		
 	}
