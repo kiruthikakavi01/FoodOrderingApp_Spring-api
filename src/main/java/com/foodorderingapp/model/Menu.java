@@ -18,10 +18,13 @@ public class Menu {
 	@GeneratedValue(strategy = GenerationType.IDENTITY) //AutoIncrement
 	@Column(name="id")
     private int id;
-	@Column(name="Dish_Name",nullable=false,unique=true,length=100)
+	@Column(name="Dish_Name",nullable=false,length=100)
 	private String dishName;
 	@Column(name="Dish_Type",nullable=false,length=100)
 	private String dishType;
 	@Column(name="Price",nullable=false)
 	private int price;
+	@Column(name="Hotel_Name",nullable=false,length=100)
+	private  String hotelName;
+	
 }

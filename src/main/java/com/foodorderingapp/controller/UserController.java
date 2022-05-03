@@ -56,16 +56,15 @@ public class UserController {
 			return null;
 		}
 	}
-		/*@GetMapping("users/login")
-		public User login(@RequestParam("email") String email,@RequestParam("password") String password) {
-			User user = userRepository.findByEmailAndPassword(email, password);
-			if(user == null) {
-				
-			}
-			return user;
+	@PostMapping("users/login")
+	public User login(@RequestBody User user) {
+		Optional<User> userObj=userRepository.findByEmailAndPassword(user.getEmail(),user.getPassword());
+		if(userObj.isPresent()) {
+			return userObj.get();
+		}else {
+		return null;
+		}
 		
-		
-		
-	}*/
+	}
 
 }
