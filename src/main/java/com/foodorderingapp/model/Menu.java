@@ -17,13 +17,13 @@ public class Menu {
 	@Id	
 	@GeneratedValue(strategy = GenerationType.IDENTITY) //AutoIncrement
 	@Column(name="id")
-    private int id;
+    private Integer id;
 	@Column(name="Dish_Name",nullable=false,length=100)
 	private String dishName;
 	@Column(name="Dish_Type",nullable=false,length=100)
 	private String dishType;
 	@Column(name="Price",nullable=false)
-	private int price;
+	private Integer price;
 	@Column(name="Hotel_Name",nullable=false,length=100)
 	private  String hotelName;
 	

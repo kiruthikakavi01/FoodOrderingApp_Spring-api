@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.foodorderingapp.dao.UserRepository;
@@ -63,6 +64,24 @@ public class UserController {
 		return null;
 		}
 		
+	}
+	@GetMapping("users/email")
+	public User getUserByEmail(@RequestParam("email") String email) {
+		
+		return userRepository.findByEmail(email);
+		
+	}
+	@PostMapping("users/email")
+	public void updateResetPassword(@RequestParam("email") String email,@RequestBody User user) {
+		user=userRepository.findByEmail(email);
+		System.out.println(user);
+		
+		if(user !=null) {
+			user.setPassword(user.getPassword());
+			userRepository.save(user);
+		}else {
+			System.out.println("Could not find any customer with email");
+		}
 	}
 
 }

@@ -5,6 +5,8 @@ import java.util.Optional;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,23 +18,37 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.foodorderingapp.dao.MenuRepository;
 import com.foodorderingapp.model.Menu;
+import com.foodorderingapp.service.MenuService;
 
 
 @RestController
 public class MenuController {
 	@Autowired
 	MenuRepository menuRepository;
-
+	@Autowired
+	MenuService menuService;
+	
 	@PostMapping("dishes/save")
-	public void save(@RequestBody Menu menu) {
-		menuRepository.save(menu);
+	public ResponseEntity<String> addMenu(@RequestBody Menu menu) {
+		try {
+		menuService.save(menu);
+		return new ResponseEntity<String>("success",HttpStatus.OK);
+		}
+		catch(Exception e) {
+			return new ResponseEntity<String>(e.getMessage(),HttpStatus.BAD_REQUEST);
+		}
+		
 	}
 
-	@GetMapping("dishes/list")  //list user
-	public List<Menu> findAll() {
-		List<Menu> listMenu = menuRepository.findAll();
-		return listMenu;
-
+	@GetMapping("dishes/list")  
+	public List<Menu> displayMenu() {
+		List<Menu> findAll=null;
+		try {
+			 findAll=menuService.findAll();
+		} catch (Exception e) {	
+		e.printStackTrace();
+		}
+		return findAll;
 	}
 
 	@GetMapping("dishes/name/search")
@@ -73,9 +89,16 @@ public class MenuController {
 	}
 
 	@PutMapping("dishes/{id}") // Update User Data
-	public void update(@PathVariable("id") Integer id, @RequestBody Menu menu) {
-		menu.setId(id);
-		menuRepository.save(menu);
+	
+	public ResponseEntity<String> update(@PathVariable("id") Integer id, @RequestBody Menu menu) {
+		try {
+			menuService.update(id,menu);
+			return new ResponseEntity<String>("success",HttpStatus.OK);
+		} catch (Exception e) {
+			
+			return new ResponseEntity<String>(e.getMessage(),HttpStatus.BAD_REQUEST);
+			
+		}
 	}
 }
  
