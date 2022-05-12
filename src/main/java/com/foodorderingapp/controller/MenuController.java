@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.foodorderingapp.dao.MenuRepository;
+import com.foodorderingapp.dto.MessageDTO;
 import com.foodorderingapp.model.Menu;
 import com.foodorderingapp.service.MenuService;
 
@@ -32,7 +33,7 @@ public class MenuController {
 	public ResponseEntity<String> addMenu(@RequestBody Menu menu) {
 		try {
 		menuService.save(menu);
-		return new ResponseEntity<String>("success",HttpStatus.OK);
+		return new ResponseEntity<String>(HttpStatus.OK);
 		}
 		catch(Exception e) {
 			return new ResponseEntity<String>(e.getMessage(),HttpStatus.BAD_REQUEST);
@@ -41,7 +42,7 @@ public class MenuController {
 	}
 
 	@GetMapping("dishes/list")  
-	public List<Menu> displayMenu() {
+	public List<Menu> listMenu() {
 		List<Menu> findAll=null;
 		try {
 			 findAll=menuService.findAll();
@@ -53,11 +54,9 @@ public class MenuController {
 
 	@GetMapping("dishes/name/search")
 	public List<Menu> findByName(@RequestParam("name") String dishName) {
-		System.out.println(dishName);
-		List<Menu> menu = menuRepository.findAll();
-		//List<Menu> filteredMenus = menu.stream().filter(m-> m.getDishName().toLowerCase().contains(dishName.toLowerCase())).collect(Collectors.toList());
-		List<Menu> filteredMenus = menu.stream().filter(m-> m.getDishName().toLowerCase().contains(dishName.toLowerCase())).toList();
-		return filteredMenus;
+		
+		List<Menu> menu = menuService.findByName(dishName);
+		return menu;
 	}
 	@GetMapping("dishes/type/search")
 	public List<Menu> findByType(@RequestParam("type") String dishType){
@@ -67,36 +66,39 @@ public class MenuController {
 		return filteredMenus;
 		
 	}
-	@GetMapping("dishes/{id}") // find by user Id
+	@GetMapping("dishes/{id}") // find by Dish Id
 	public Menu findById(@PathVariable("id") Integer id) {
 		System.out.println("findById " + id);
-		
-		Optional<Menu> menu = menuRepository.findById(id);
-		if (menu.isPresent()) {
-			Menu menuObj = menu.get();
-			return menuObj;
-		} else {
-			return null;
-
-		}
-
+		Menu menu= menuService.findById(id);
+		return menu;
 	}
 
 	
 	@DeleteMapping("dishes/{id}")
-	public void delete(@PathVariable("id") Integer id) {
-		menuRepository.deleteById(id);
+	public MessageDTO delete(@PathVariable("id") Integer id) {
+		MessageDTO message = new MessageDTO();
+		try {
+			menuService.deleteById(id);
+			message.setMessage("success");
+			return message;
+			
+		} catch (Exception e) {
+			message.setMessage(e.getMessage());
+			return message;
+		}
 	}
 
-	@PutMapping("dishes/{id}") // Update User Data
-	
-	public ResponseEntity<String> update(@PathVariable("id") Integer id, @RequestBody Menu menu) {
+	@PutMapping("dishes/{id}") // Update Menu Data
+	public MessageDTO update(@PathVariable("id") Integer id, @RequestBody Menu menu) {
+		MessageDTO message = new MessageDTO();
 		try {
-			menuService.update(id,menu);
-			return new ResponseEntity<String>("success",HttpStatus.OK);
-		} catch (Exception e) {
+			String res=menuService.update(id,menu);
+			message.setMessage(res);
 			
-			return new ResponseEntity<String>(e.getMessage(),HttpStatus.BAD_REQUEST);
+			return message;
+		} catch (Exception e) {
+			message.setMessage(e.getMessage());
+			return message;
 			
 		}
 	}

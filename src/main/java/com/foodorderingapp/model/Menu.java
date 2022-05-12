@@ -26,5 +26,10 @@ public class Menu {
 	private Integer price;
 	@Column(name="Hotel_Name",nullable=false,length=100)
 	private  String hotelName;
+	@Column(name="image_url",nullable=false,length=50)
+	private String imageUrl;
+	
+	@Column(name="Ingredients",nullable=false,length=1000)
+	private String ingredients;
 	
 }
